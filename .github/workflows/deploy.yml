@@ -28,13 +28,6 @@ jobs:
       - run: npm ci
 
       - run: npm run build
-        env:
-          # Custom domain (public/CNAME) → served from the root
-          SITE: https://neuralift.fit
-          BASE_PATH: /
-          PUBLIC_POSTHOG_KEY: ${{ vars.PUBLIC_POSTHOG_KEY }}
-          PUBLIC_POSTHOG_HOST: ${{ vars.PUBLIC_POSTHOG_HOST }}
-          PUBLIC_WAITLIST_ENDPOINT: ${{ vars.PUBLIC_WAITLIST_ENDPOINT }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -71,16 +71,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     })();
   </script>
 
-  {/* PostHog: loaded only when PUBLIC_POSTHOG_KEY is set, and not on forced review visits.
+  {/* PostHog: loaded only when POSTHOG_KEY is set, and not on forced review visits.
       Memory persistence sets no cookies or storage, so no consent banner is needed; each page load
       is its own anonymous person, which is enough for an exposure → waitlist_submitted funnel. */}
   <script>
     import { experiments } from '../experiments';
-    const key = import.meta.env.PUBLIC_POSTHOG_KEY as string | undefined;
-    if (key && !(window as any).nlForced) {
+    // Public project key (phc_…), safe to ship in client code
+    const POSTHOG_KEY = '';
+    if (POSTHOG_KEY && !(window as any).nlForced) {
       const { default: posthog } = await import('posthog-js');
-      posthog.init(key, {
-        api_host: (import.meta.env.PUBLIC_POSTHOG_HOST as string | undefined) || 'https://eu.i.posthog.com',
+      posthog.init(POSTHOG_KEY, {
+        api_host: 'https://eu.i.posthog.com',
         persistence: 'memory',
         capture_pageview: true,
       });

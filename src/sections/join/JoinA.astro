@@ -1,6 +1,6 @@
 ---
-/** Founding-cohort sign-up. Posts to PUBLIC_WAITLIST_ENDPOINT; demo mode when unset. */
-const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT || '';
+/** Founding-cohort sign-up. Posts to Formspree; demo mode when the endpoint is empty. */
+const endpoint = 'https://formspree.io/f/xoevnkje';
 ---
 <section id="join" class="section bg-midnight text-bone" aria-labelledby="join-h">
   <div class="wrap grid items-center gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-18">
@@ -54,8 +54,9 @@ const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT || '';
         if (endpoint) {
           const res = await fetch(endpoint, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: value, source: 'landing', experiments }),
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            // Formspree stores flat fields, so experiment assignments go in as one string.
+            body: JSON.stringify({ email: value, source: 'landing', experiments: JSON.stringify(experiments) }),
           });
           if (!res.ok) throw new Error(`Request failed: ${res.status}`);
           show('ok', "You're on the list. We'll email you when your place in the first cohort opens");

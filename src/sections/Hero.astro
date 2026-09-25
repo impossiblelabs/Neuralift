@@ -1,22 +1,14 @@
 ---
-/**
- * Shared hero layout. Variants differ only in copy, so HeroA/HeroB pass it in.
- * `variant` suffixes the heading id: every variant is in the DOM, so ids must be unique.
- */
-import Trace from '../../components/Trace.astro';
-
-interface Props { variant: string; lead: string; accent: string; lede: string }
-const { variant, lead, accent, lede } = Astro.props;
-const headingId = `hero-h-${variant}`;
+import Trace from '../components/Trace.astro';
 ---
-<section class="overflow-hidden bg-midnight text-bone py-14 md:py-24" aria-labelledby={headingId}>
+<section class="overflow-hidden bg-midnight text-bone py-14 md:py-24" aria-labelledby="hero-h">
   <div class="wrap grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
     <div class="flex flex-col gap-5">
       <p class="eyebrow text-slate-400">12&nbsp;weeks&nbsp;· 20&nbsp;min&nbsp;/&nbsp;day&nbsp;· no weights required</p>
-      <h1 id={headingId} class="display font-black text-[clamp(2.4rem,5.2vw,4rem)] leading-[1.02]">
-        {lead} <em class="not-italic text-signal">{accent}</em>
+      <h1 id="hero-h" class="display font-black text-[clamp(2.4rem,5.2vw,4rem)] leading-[1.02]">
+        What if your next strength program started <em class="not-italic text-signal">in your brain?</em>
       </h1>
-      <p class="lede text-slate-300">{lede}</p>
+      <p class="lede text-slate-300">A 12-week, research-informed motor-imagery program designed to train the neural side of strength. 20 minutes a day, no weights required</p>
       <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <a class="btn btn-primary" href="#join">Join the first cohort</a>
         <a class="btn btn-ghost text-bone border-slate-600 hover:bg-slate-800" href="#research">See the research</a>

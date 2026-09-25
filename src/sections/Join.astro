@@ -9,7 +9,6 @@ const endpoint = 'https://formspree.io/f/xoevnkje';
       <h2 id="join-h" class="h2 mt-3.5">Strength starts in the brain. Train the signal</h2>
       <p class="lede mt-5 text-slate-300">Join the first Neuralift cohort. Twelve weeks, twenty minutes a day, a strength test at each end and a protocol built from peer-reviewed research. We'll open places in order of <span class="whitespace-nowrap">sign-up</span></p>
     </div>
-    {/* No ids in here: every variant is in the DOM, so the script finds elements via data-waitlist. */}
     <form data-waitlist class="flex flex-col gap-3.5 rounded-2xl border border-slate-700 bg-slate-900 p-6" data-endpoint={endpoint} novalidate>
       <label class="flex flex-col gap-3.5 text-[0.9rem] font-medium text-slate-300">
         Email address
@@ -49,19 +48,17 @@ const endpoint = 'https://formspree.io/f/xoevnkje';
       }
       submit.disabled = true;
       submit.textContent = 'Joining…';
-      const experiments = (window as any).nlExperiments || {};
       try {
         if (endpoint) {
           const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            // Formspree stores flat fields, so experiment assignments go in as one string.
-            body: JSON.stringify({ email: value, source: 'landing', experiments: JSON.stringify(experiments) }),
+            body: JSON.stringify({ email: value, source: 'landing' }),
           });
           if (!res.ok) throw new Error(`Request failed: ${res.status}`);
           show('ok', "You're on the list. We'll email you when your place in the first cohort opens");
           // Only real sign-ups count as conversions.
-          (window as any).posthog?.capture('waitlist_submitted');
+          (window as any).rdt?.('track', 'SignUp');
         } else {
           show('ok', "Thanks. You'd be on the list for the first cohort<span class=\"mt-1.5 block font-mono text-[0.8rem] text-slate-400\">Demo mode: the waitlist endpoint isn't connected yet, so nothing was sent</span>");
         }

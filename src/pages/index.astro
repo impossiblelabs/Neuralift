@@ -1,38 +1,15 @@
 ---
-/**
- * The landing page is a stack of experiments. Each <Experiment> renders every
- * variant listed in src/experiments.ts and shows the one assigned to the visitor.
- * To test a new version of a section: add a component in src/sections/<name>/,
- * add its variant key to experiments.ts, and add a slot here.
- */
 import Base from '../layouts/Base.astro';
-import Experiment from '../components/Experiment.astro';
-import HeroA from '../sections/hero/HeroA.astro';
-import HeroB from '../sections/hero/HeroB.astro';
-import MechanismA from '../sections/mechanism/MechanismA.astro';
-import ResearchA from '../sections/research/ResearchA.astro';
-import ProgramA from '../sections/program/ProgramA.astro';
-import JoinA from '../sections/join/JoinA.astro';
+import Hero from '../sections/Hero.astro';
+import Mechanism from '../sections/Mechanism.astro';
+import Research from '../sections/Research.astro';
+import Program from '../sections/Program.astro';
+import Join from '../sections/Join.astro';
 ---
 <Base title="Neuralift · Motor-imagery strength training">
-  <Experiment name="hero">
-    <HeroA slot="a" />
-    <HeroB slot="b" />
-  </Experiment>
-
-  <Experiment name="mechanism">
-    <MechanismA slot="a" />
-  </Experiment>
-
-  <Experiment name="research">
-    <ResearchA slot="a" />
-  </Experiment>
-
-  <Experiment name="program">
-    <ProgramA slot="a" />
-  </Experiment>
-
-  <Experiment name="join">
-    <JoinA slot="a" />
-  </Experiment>
+  <Hero />
+  <Mechanism />
+  <Research />
+  <Program />
+  <Join />
 </Base>

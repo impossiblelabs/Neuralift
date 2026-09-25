@@ -1,0 +1,17 @@
+---
+import Logo from './Logo.astro';
+const links = [
+  { href: '#mechanism', label: 'How it works' },
+  { href: '#research', label: 'The research' },
+  { href: '#program', label: 'The program' },
+];
+---
+<header class="sticky top-0 z-20 bg-midnight text-bone border-b border-slate-800">
+  <div class="wrap flex h-[68px] items-center justify-between gap-6">
+    <a href="#top" class="inline-flex items-center text-bone" aria-label="Neuralift home"><Logo class="h-[26px]" /></a>
+    <nav class="flex items-center gap-7 text-[0.95rem] font-medium" aria-label="Primary">
+      {links.map((l) => <a href={l.href} class="hidden md:inline py-2.5 text-slate-300 hover:text-bone no-underline">{l.label}</a>)}
+      <a class="btn btn-primary px-4.5 py-2.5 text-[0.92rem]" href="#join" aria-label="Join the first cohort"><span class="sm:hidden">Join</span><span class="hidden sm:inline">Join the first cohort</span></a>
+    </nav>
+  </div>
+</header>

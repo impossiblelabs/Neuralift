@@ -1,0 +1,105 @@
+---
+import '@fontsource/archivo/latin-700.css';
+import '@fontsource/archivo/latin-800.css';
+import '@fontsource/archivo/latin-900.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '../styles/global.css';
+import { experiments } from '../experiments';
+import { withBase } from '../lib/url';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props { title?: string; description?: string }
+const {
+  title = 'Neuralift',
+  description = 'A 12-week, research-informed motor-imagery program designed to train the neural side of strength. 20 minutes a day, no weights required',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={new URL(withBase('og-logo.png'), Astro.site).href} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0A0F1C" />
+  <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+  <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+
+  {/* Variant assignment. Runs before the body parses so the chosen variant is the first paint. */}
+  <script is:inline define:vars={{ experiments }}>
+    (function () {
+      var html = document.documentElement;
+      var query = new URLSearchParams(location.search);
+      var stored = {};
+      try { stored = JSON.parse(localStorage.getItem('nl.experiments') || '{}') || {}; } catch (e) {}
+      var chosen = {};
+      var forced = false;
+      Object.keys(experiments).forEach(function (name) {
+        var exp = experiments[name];
+        var variants = exp.variants;
+        var pick = query.get(name);
+        if (variants.indexOf(pick) >= 0) forced = true;
+        else pick = stored[name];
+        if (variants.indexOf(pick) < 0) {
+          var weights = exp.weights && exp.weights.length === variants.length ? exp.weights : variants.map(function () { return 1; });
+          var total = weights.reduce(function (a, b) { return a + b; }, 0);
+          var r = Math.random() * total;
+          pick = variants[variants.length - 1];
+          for (var i = 0; i < variants.length; i++) { r -= weights[i]; if (r < 0) { pick = variants[i]; break; } }
+        }
+        chosen[name] = pick;
+        html.setAttribute('data-exp-' + name, pick);
+      });
+      // A forced review visit (?hero=b) is not saved and not tracked, so it cannot skew results.
+      if (!forced) { try { localStorage.setItem('nl.experiments', JSON.stringify(chosen)); } catch (e) {} }
+      window.nlExperiments = chosen;
+      window.nlForced = forced;
+    })();
+  </script>
+
+  {/* PostHog: loaded only when PUBLIC_POSTHOG_KEY is set, and not on forced review visits.
+      Memory persistence sets no cookies or storage, so no consent banner is needed; each page load
+      is its own anonymous person, which is enough for an exposure → waitlist_submitted funnel. */}
+  <script>
+    import { experiments } from '../experiments';
+    const key = import.meta.env.PUBLIC_POSTHOG_KEY as string | undefined;
+    if (key && !(window as any).nlForced) {
+      const { default: posthog } = await import('posthog-js');
+      posthog.init(key, {
+        api_host: (import.meta.env.PUBLIC_POSTHOG_HOST as string | undefined) || 'https://eu.i.posthog.com',
+        persistence: 'memory',
+        capture_pageview: true,
+      });
+      const chosen: Record<string, string> = (window as any).nlExperiments || {};
+      const props: Record<string, string> = {};
+      for (const name in chosen) props[`experiment_${name}`] = chosen[name];
+      posthog.register(props);
+      // Exposure only for real tests: a section with one variant has nothing to compare.
+      for (const name in chosen) {
+        if (experiments[name as keyof typeof experiments].variants.length < 2) continue;
+        posthog.capture('experiment_exposed', { experiment: name, variant: chosen[name] });
+      }
+      (window as any).posthog = posthog;
+    }
+  </script>
+</head>
+<body>
+  <Nav />
+  <main id="top"><slot /></main>
+  <Footer />
+</body>
+</html>

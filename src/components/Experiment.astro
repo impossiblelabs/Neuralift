@@ -1,0 +1,35 @@
+---
+/**
+ * Renders every variant of one experiment and shows only the assigned one.
+ * Usage:
+ *   <Experiment name="hero">
+ *     <HeroA slot="a" />
+ *     <HeroB slot="b" />
+ *   </Experiment>
+ * Variant names come from src/experiments.ts. Missing slots are skipped with a build warning.
+ */
+import { experiments, type ExperimentName } from '../experiments';
+
+interface Props { name: ExperimentName }
+const { name } = Astro.props;
+const { variants } = experiments[name];
+
+type Rendered = { v: string; html: string };
+const present: Rendered[] = [];
+for (const v of variants) {
+  if (!Astro.slots.has(v)) {
+    console.warn(`[experiment:${name}] no slot for variant "${v}"`);
+    continue;
+  }
+  present.push({ v, html: await Astro.slots.render(v) });
+}
+const first = present[0]?.v;
+
+const css = [
+  `[data-exp="${name}"]{display:none}`,
+  first ? `html:not([data-exp-${name}]) [data-exp="${name}"][data-variant="${first}"]{display:contents}` : '',
+  ...present.map(({ v }) => `html[data-exp-${name}="${v}"] [data-exp="${name}"][data-variant="${v}"]{display:contents}`),
+].join('');
+---
+<Fragment set:html={`<style>${css}</style>`} />
+{present.map(({ v, html }) => <div data-exp={name} data-variant={v} set:html={html} />)}

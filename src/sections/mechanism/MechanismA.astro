@@ -1,0 +1,34 @@
+---
+import SectionHead from '../../components/SectionHead.astro';
+
+const icon = (paths: string) =>
+  `<svg viewBox="0 0 64 44" class="block h-11 w-auto self-start text-midnight" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
+// Brain → spinal cord → muscle is a real sequence, so the steps are numbered.
+const steps = [
+  { n: '01 · Motor cortex', title: 'Plan the contraction', body: 'Eyes closed, you imagine pulling as hard as you can. Research suggests the brain plans that effort much as it would a real one',
+    icon: icon('<path d="M12 30c-6-4-6-14 0-18 2-8 16-9 20-2 6-3 16 0 16 8 6 2 6 10 0 12-1 6-8 8-13 5-4 5-14 5-18-1-3 1-4-1-5-4z"/><path d="M30 12c0 8-4 14-8 16M34 14c4 4 8 6 12 6"/>') },
+  { n: '02 · Spinal cord', title: 'Rehearse the command', body: 'You rehearse the command to contract without moving. Repeated practice may improve how fully your nervous system can drive the muscle',
+    icon: icon('<path d="M6 22h14l5-12 8 24 6-16 4 8h15"/><circle cx="58" cy="22" r="3" fill="currentColor" stroke="none"/>') },
+  { n: '03 · Muscle', title: 'Recruit the muscle', body: 'The aim: train your brain to recruit the muscle you already have more effectively. Same muscle, trained signal',
+    icon: icon('<path d="M8 30c4-12 12-18 24-18s20 6 24 18"/><path d="M14 30c3-7 9-11 18-11s15 4 18 11M20 30c2-4 6-6 12-6s10 2 12 6"/>') },
+];
+---
+<section id="mechanism" class="section" aria-labelledby="mech-h">
+  <div class="wrap">
+    <SectionHead eyebrow="How it works" title="Your muscles aren't the only thing that determines how strong you are" id="mech-h">
+      Every voluntary contraction begins as a signal. How much force you produce depends on the muscle you have and on how completely your nervous system can recruit and drive it. Neuralift trains the second part
+    </SectionHead>
+
+    <div class="grid overflow-hidden rounded-2xl border border-slate-200 bg-white lg:grid-cols-3">
+      {steps.map((s) => (
+        <div class="grid content-start gap-3.5 border-slate-200 p-7 not-last:border-b lg:row-span-4 lg:grid-rows-subgrid lg:not-last:border-b-0 lg:not-last:border-r">
+          <span class="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-signal-deep">{s.n}</span>
+          <Fragment set:html={s.icon} />
+          <h3 class="h3">{s.title}</h3>
+          <p class="text-[0.98rem] text-slate-500">{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

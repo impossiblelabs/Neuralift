@@ -1,0 +1,23 @@
+---
+/** Hero visual: one imagined maximal contraction drawn as a Signal trace over a Slate track. */
+---
+<div class="flex w-full max-w-[520px] flex-col gap-4 rounded-2xl lg:max-w-none border border-slate-700 bg-slate-900 p-5 pb-4" role="img" aria-label="Illustration: one imagined maximal contraction as a signal trace">
+  <div class="eyebrow flex items-baseline justify-between gap-3 text-slate-400"><span>Session 01 · Rep 3 of 10</span></div>
+  <svg class="block w-full h-auto" viewBox="0 0 420 160" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path class="stroke-slate-700" d="M0 110 H420"/>
+    <path class="spike stroke-signal motion-safe:animate-draw" d="M0 110 H60 C80 110 90 112 100 110 C110 108 120 100 126 96 C132 92 136 100 140 110 C144 120 150 118 156 112 L180 112 C190 112 196 100 202 60 C208 20 214 24 220 60 C226 96 232 110 240 112 L270 112 C280 112 290 120 300 118 C310 116 318 110 326 110 C334 110 340 108 350 110 L420 110"/>
+  </svg>
+  <div class="grid grid-cols-3 gap-3 border-t border-slate-700 pt-3.5">
+    {[['Hold', '5', 's'], ['Rest', '5', 's'], ['Load', '0', 'kg']].map(([k, v, u]) => (
+      <div class="flex flex-col gap-0.5">
+        <span class="eyebrow text-[0.75rem] text-slate-400">{k}</span>
+        <span class="num text-[1.35rem] font-extrabold tracking-[-0.03em] text-bone">{v}<span class="ml-1 font-sans text-[0.85rem] font-medium tracking-normal text-slate-400">{u}</span></span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .spike { stroke-dasharray: 1300; stroke-dashoffset: 1300; }
+  @media (prefers-reduced-motion: reduce) { .spike { stroke-dashoffset: 0; } }
+</style>

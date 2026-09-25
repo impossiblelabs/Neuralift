@@ -1,0 +1,71 @@
+---
+import SectionHead from '../../components/SectionHead.astro';
+
+const weeks = Array.from({ length: 12 }, (_, i) => i + 1);
+const cards = [
+  { v: '12', u: 'weeks', title: 'The same length as the study', body: 'Neural adaptation takes repetition over time. The protocol runs the full twelve weeks the research used, with a measured start and a measured finish' },
+  { v: '20', u: 'min / day', title: 'Guided, eyes closed', body: 'Each session is voice-guided, first-person and kinesthetic: you feel the contraction rather than picture it. Sets, holds and rests are timed for you' },
+  { v: '0', u: 'kg', title: 'No external load', body: 'Nothing to buy and nothing to lift. Train on a bench, a chair, or a bed. A complement to physical training, or a way to train when load is off the table' },
+];
+const timeline = [
+  ['00:00', 'Settle and focus', 'Sit or lie down, eyes closed. Bring attention to the target muscle'],
+  ['02:00', 'Imagined maximal contractions', 'Sets of 5-second maximal efforts, 5 seconds rest, guided rep by rep'],
+  ['16:00', 'Imagery quality check', 'Rate how vivid and effortful the contractions felt. This is tracked across the program'],
+  ['18:00', 'Cool-down and log', 'Two minutes down, then perceived exertion and adherence are recorded'],
+  ['20:00', 'Done', 'Same time tomorrow'],
+];
+---
+<section id="program" class="section border-t border-slate-200" aria-labelledby="prog-h">
+  <div class="wrap">
+    <SectionHead eyebrow="The Neuralift Protocol" title="Twelve weeks. Twenty minutes a day. No weights" id="prog-h">
+      Neuralift turns the research into a guided, first-person motor-imagery program. You measure your strength at the start, train daily with your eyes closed and measure again at the end
+    </SectionHead>
+
+    <div class="mb-3.5 grid grid-cols-6 gap-1.5 md:grid-cols-12" role="group" aria-label="Twelve-week structure">
+      {weeks.map((w) => {
+        const test = w === 1 || w === 12;
+        return (
+          <div class:list={['relative flex aspect-[1/1.35] items-end justify-center rounded-lg border pb-2 font-mono text-[0.75rem] tabular-nums', test ? 'border-midnight bg-midnight text-bone' : 'border-slate-200 bg-white text-slate-500']}>
+            {test && <span class="absolute top-2 h-2 w-2 rounded-full bg-signal" aria-hidden="true"></span>}
+            <span class="sr-only">Week </span>{String(w).padStart(2, '0')}
+            {test && <span class="sr-only">{w === 1 ? ': baseline strength test' : ': retest'}</span>}
+          </div>
+        );
+      })}
+    </div>
+    <p class="eyebrow flex items-center gap-2 text-[0.75rem] text-slate-500 md:hidden" aria-hidden="true">
+      <span class="h-2 w-2 shrink-0 rounded-full bg-signal"></span><span><span class="text-signal-deep">Strength test</span>&nbsp;· weeks 01 and 12</span>
+    </p>
+    <div class="hidden grid-cols-[1fr_5fr_1fr] gap-1.5 md:grid" aria-hidden="true">
+      <span class="eyebrow border-t-2 border-signal pt-2 text-[0.75rem] text-signal-deep">Baseline test</span>
+      <span class="eyebrow border-t-2 border-slate-200 pt-2 text-[0.75rem] text-slate-500">Daily guided imagery sessions</span>
+      <span class="eyebrow border-t-2 border-signal pt-2 text-[0.75rem] text-signal-deep">Retest</span>
+    </div>
+
+    <div class="mt-12 grid gap-5 lg:grid-cols-3">
+      {cards.map((c) => (
+        <div class="grid content-start gap-3 rounded-2xl border border-slate-200 bg-white p-6 lg:row-span-3 lg:grid-rows-subgrid">
+          <span class="num text-[2.4rem]">{c.v}<span class="eyebrow ml-1.5 font-medium text-slate-500">{c.u}</span></span>
+          <h3 class="h3">{c.title}</h3>
+          <p class="text-[0.98rem] text-slate-500">{c.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 grid items-start gap-8 md:grid-cols-[0.9fr_1.1fr] md:gap-14">
+      <div>
+        <p class="eyebrow mb-3.5 text-signal-deep">One session</p>
+        <h3 class="h3 text-[1.7rem]">What twenty minutes looks like</h3>
+        <p class="mt-3.5 max-w-[30em] text-slate-500">Every session follows the same shape. Consistency is the point: the study's participants trained the same way, five days a week, for twelve weeks</p>
+      </div>
+      <ul class="flex flex-col">
+        {timeline.map(([t, title, detail]) => (
+          <li class="grid grid-cols-[3.75rem_1fr] items-baseline gap-3 sm:grid-cols-[5.5rem_1fr] sm:gap-4 border-t border-slate-200 py-3.5 last:border-b">
+            <span class="font-mono text-[0.85rem] tabular-nums text-signal-deep">{t}</span>
+            <span class="text-[0.98rem]">{title}<small class="mt-0.5 block text-[0.88rem] text-slate-500">{detail}</small></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

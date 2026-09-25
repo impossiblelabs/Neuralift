@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neuralift Protocol</title>
+<meta name="description" content="Neuralift is a 12-week, research-informed motor-imagery program designed to train the neural side of strength. 20 minutes a day, no weights required.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='3 13 134 74'%3E%3Cpath d='M10 36V70M22 26V80M34 42V64M106 42V64M118 26V80M130 36V70' fill='none' stroke='%23FF8A00' stroke-width='14' stroke-linecap='round'/%3E%3Cpath d='M4 53H56L66 20L78 53H136' fill='none' stroke='%23FF8A00' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Brand tokens (brand/tokens.css) */
+  :root {
+    --nl-midnight: #0A0F1C; --nl-bone: #F5F3EE; --nl-white: #FFFFFF;
+    --nl-signal: #FF8A00; --nl-signal-bright: #FFA033; --nl-signal-deep: #B34700; --nl-signal-wash: #FFEBD3;
+    --nl-slate-900: #131927; --nl-slate-800: #1C2334; --nl-slate-700: #2A3346; --nl-slate-600: #414B60;
+    --nl-slate-500: #5B6577; --nl-slate-400: #8A93A6; --nl-slate-300: #B4BAC8; --nl-slate-200: #D9DCE4; --nl-slate-100: #ECEEF2;
+    --font-display: 'Archivo', system-ui, -apple-system, sans-serif;
+    --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Page roles. Light = Bone page (marketing ground). */
+    --bg: var(--nl-bone);
+    --surface: var(--nl-white);
+    --text: var(--nl-midnight);
+    --muted: var(--nl-slate-500);
+    --line: var(--nl-slate-200);
+    --accent-text: var(--nl-signal-deep);
+    --accent-wash: var(--nl-signal-wash);
+    --track: var(--nl-slate-200);
+    --btn-hover: #E67C00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: var(--nl-midnight); --surface: var(--nl-slate-800); --text: var(--nl-bone);
+      --muted: var(--nl-slate-400); --line: var(--nl-slate-700); --accent-text: var(--nl-signal);
+      --accent-wash: #2A1D0E; --track: var(--nl-slate-700); --btn-hover: var(--nl-signal-bright);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: var(--nl-midnight); --surface: var(--nl-slate-800); --text: var(--nl-bone);
+    --muted: var(--nl-slate-400); --line: var(--nl-slate-700); --accent-text: var(--nl-signal);
+    --accent-wash: #2A1D0E; --track: var(--nl-slate-700); --btn-hover: var(--nl-signal-bright);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  img, svg { max-width: 100%; }
+  a { color: var(--accent-text); }
+  :focus-visible { outline: 3px solid var(--nl-signal); outline-offset: 3px; }
+
+  .wrap { width: min(1120px, 100%); margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); }
+
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.035em; line-height: 1.02; margin: 0; text-wrap: balance; }
+  h1 { font-weight: 900; font-size: clamp(2rem, 3.6vw, 3.1rem); line-height: 1.06; }
+  h2 { font-weight: 800; font-size: clamp(2rem, 4.6vw, 3.4rem); }
+  h3 { font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1.15; }
+  p { margin: 0; }
+  .lede { font-size: clamp(1.1rem, 1.6vw, 1.3rem); line-height: 1.5; max-width: 34em; }
+  .muted { color: var(--muted); }
+  .prose { max-width: 36em; }
+  .prose p + p { margin-top: 1em; }
+
+  .eyebrow { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .eyebrow.signal { color: var(--accent-text); }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  /* Buttons. Signal is spent on exactly one primary action per screen. */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; padding: 0.9em 1.5em; border-radius: 999px;
+    font-family: var(--font-body); font-weight: 600; font-size: 1rem; text-decoration: none; border: 1.5px solid transparent; cursor: pointer; white-space: nowrap;
+    transition: background-color .15s ease, border-color .15s ease, transform .15s ease; }
+  .btn-primary { background: var(--nl-signal); color: var(--nl-midnight); }
+  .btn-primary:hover { background: var(--btn-hover); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-ghost { background: transparent; color: inherit; border-color: currentColor; }
+  .btn-ghost:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+
+  /* ---------- Nav ---------- */
+  .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--nl-midnight); color: var(--nl-bone); border-bottom: 1px solid var(--nl-slate-800); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 68px; }
+  .logo { display: inline-flex; align-items: center; color: inherit; text-decoration: none; }
+  .logo svg { height: 26px; width: auto; display: block; }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 0.95rem; font-weight: 500; }
+  .nav-links a { color: var(--nl-slate-300); text-decoration: none; }
+  .nav-links a:hover { color: var(--nl-bone); }
+  .nav .btn { padding: 0.6em 1.15em; font-size: 0.92rem; }
+  @media (max-width: 720px) { .nav-links a:not(.btn) { display: none; } }
+
+  /* ---------- Hero (committed dark, the product's ground) ---------- */
+  .hero { background: var(--nl-midnight); color: var(--nl-bone); padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px); overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .hero .eyebrow { color: var(--nl-slate-400); }
+  .hero h1 em { font-style: normal; color: var(--nl-signal); }
+  .hero .kicker { font-size: clamp(1.1rem, 1.7vw, 1.35rem); font-weight: 500; color: var(--nl-bone); max-width: 30em; line-height: 1.4; text-wrap: balance; }
+  .hero .lede { color: var(--nl-slate-300); margin-top: 12px; }
+  .hero-copy { display: flex; flex-direction: column; gap: 22px; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+  .hero .btn-ghost { color: var(--nl-bone); border-color: var(--nl-slate-600); }
+  .hero .btn-ghost:hover { background: var(--nl-slate-800); }
+  .hero-note { font-family: var(--font-mono); font-size: 0.8rem; color: var(--nl-slate-400); letter-spacing: 0.02em; }
+
+  /* The trace: one action potential over a Slate track. The only moving thing on the page. */
+  .trace-card { background: var(--nl-slate-900); border: 1px solid var(--nl-slate-700); border-radius: 16px; padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 16px; }
+  .trace-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--nl-slate-400); }
+  .trace-head strong { color: var(--nl-bone); font-weight: 500; }
+  .trace { width: 100%; height: auto; display: block; }
+  .trace .track { stroke: var(--nl-slate-700); }
+  .trace .spike { stroke: var(--nl-signal); stroke-dasharray: 1300; stroke-dashoffset: 1300; animation: draw 3.2s cubic-bezier(.4,0,.2,1) .4s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .trace-foot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1px solid var(--nl-slate-700); padding-top: 14px; }
+  .trace-foot div { display: flex; flex-direction: column; gap: 2px; }
+  .trace-foot .k { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--nl-slate-400); }
+  .trace-foot .v { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.03em; color: var(--nl-bone); font-variant-numeric: tabular-nums; }
+  .trace-foot .v span { color: var(--nl-slate-400); font-family: var(--font-body); font-weight: 500; font-size: 0.85rem; letter-spacing: 0; margin-left: 4px; }
+  @media (prefers-reduced-motion: reduce) { .trace .spike { animation: none; stroke-dashoffset: 0; } html { scroll-behavior: auto; } }
+  @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+
+  /* ---------- Sections ---------- */
+  section { padding-block: clamp(64px, 9vw, 120px); }
+  section + section { border-top: 1px solid var(--line); }
+  .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: end; margin-bottom: clamp(36px, 5vw, 64px); }
+  .section-head .eyebrow { margin-bottom: 14px; }
+  @media (max-width: 860px) { .section-head { grid-template-columns: 1fr; align-items: start; } }
+
+  /* Mechanism: brain → spinal cord → muscle is a real sequence, so it is numbered. */
+  .path { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+  .path > div { padding: 28px 26px 30px; display: flex; flex-direction: column; gap: 14px; border-right: 1px solid var(--line); }
+  .path > div:last-child { border-right: 0; }
+  .path .n { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-text); letter-spacing: 0.08em; }
+  .path p { color: var(--muted); font-size: 0.98rem; }
+  .path svg { height: 44px; width: auto; display: block; color: var(--text); }
+  @media (max-width: 720px) { .path { grid-template-columns: 1fr; } .path > div { border-right: 0; border-bottom: 1px solid var(--line); } .path > div:last-child { border-bottom: 0; } }
+  .mechanism-claim { margin-top: 36px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); }
+  @media (max-width: 860px) { .mechanism-claim { grid-template-columns: 1fr; } }
+  .callout { border-left: 3px solid var(--nl-signal); padding-left: 20px; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1.25; text-wrap: balance; }
+
+  /* Research: the figures are the point, so they get the big-number treatment, once. */
+  .study { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(24px, 4vw, 56px); }
+  @media (max-width: 860px) { .study { grid-template-columns: 1fr; } }
+  .figures { background: var(--nl-midnight); color: var(--nl-bone); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+  .figures .eyebrow { color: var(--nl-slate-400); }
+  .fig-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fig { display: flex; flex-direction: column; gap: 4px; }
+  .fig .v { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.04em; font-size: clamp(1.7rem, 3.4vw, 2.6rem); line-height: 1; font-variant-numeric: tabular-nums; }
+  .fig .v.signal { color: var(--nl-signal); }
+  .fig .k { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--nl-slate-400); line-height: 1.35; }
+  .figures hr { border: 0; border-top: 1px solid var(--nl-slate-700); margin: 0; }
+  .bars { display: flex; flex-direction: column; gap: 12px; }
+  .bar { display: grid; grid-template-columns: 11rem 1fr 4.5rem; align-items: center; gap: 12px; font-size: 0.9rem; }
+  .bar .lbl { color: var(--nl-slate-300); }
+  .bar .trk { height: 10px; background: var(--nl-slate-700); border-radius: 999px; overflow: hidden; }
+  .bar .fil { height: 100%; background: var(--nl-signal); border-radius: 999px; }
+  .bar .fil.phys { background: var(--nl-slate-300); }
+  .bar .num { font-family: var(--font-mono); font-size: 0.85rem; text-align: right; color: var(--nl-bone); font-variant-numeric: tabular-nums; }
+  @media (max-width: 480px) { .bar { grid-template-columns: 1fr 4.5rem; } .bar .lbl { grid-column: 1 / -1; } .fig-row { grid-template-columns: 1fr 1fr; } }
+  .caveat { font-size: 0.86rem; color: var(--nl-slate-400); line-height: 1.5; }
+  .cite { font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.5; color: var(--muted); margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .lit { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-direction: column; }
+  .lit li { padding: 14px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; font-size: 0.98rem; }
+  .lit li::before { content: ""; width: 10px; height: 10px; margin-top: 7px; border-radius: 50%; background: var(--nl-signal); }
+  .lit li:last-child { border-bottom: 1px solid var(--line); }
+
+  /* Program: 12 weeks as a strip. The week cells are the structure, not decoration. */
+  .weeks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; margin-bottom: 14px; }
+  .wk { aspect-ratio: 1 / 1.35; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; position: relative; }
+  .wk.test { background: var(--nl-midnight); color: var(--nl-bone); border-color: var(--nl-midnight); }
+  .wk.test::after { content: ""; position: absolute; top: 9px; width: 8px; height: 8px; border-radius: 50%; background: var(--nl-signal); }
+  .phases { display: grid; grid-template-columns: 1fr 5fr 1fr; gap: 6px; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .phases span { padding-top: 8px; border-top: 2px solid var(--line); }
+  .phases span.test { border-top-color: var(--nl-signal); color: var(--accent-text); }
+  @media (max-width: 720px) { .weeks { grid-template-columns: repeat(6, minmax(0, 1fr)); } .phases { display: none; } }
+  .program-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 48px; }
+  @media (max-width: 860px) { .program-grid { grid-template-columns: 1fr; } }
+  .pcard { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 12px; }
+  .pcard .big { font-family: var(--font-display); font-weight: 900; font-size: 2.4rem; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .pcard .big span { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-left: 6px; }
+  .pcard p { color: var(--muted); font-size: 0.98rem; }
+
+  /* Session: what 20 minutes actually looks like */
+  .session { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+  @media (max-width: 860px) { .session { grid-template-columns: 1fr; } }
+  .timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .timeline li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); align-items: baseline; }
+  .timeline li:last-child { border-bottom: 1px solid var(--line); }
+  .timeline .t { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-text); font-variant-numeric: tabular-nums; }
+  .timeline .d { font-size: 0.98rem; }
+  .timeline .d small { display: block; color: var(--muted); font-size: 0.88rem; margin-top: 2px; }
+
+  /* Expectation setting: plain, deliberately unflashy */
+  .expect { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
+  @media (max-width: 860px) { .expect { grid-template-columns: 1fr; } }
+  .expect div { display: flex; flex-direction: column; gap: 10px; padding-top: 18px; border-top: 2px solid var(--text); }
+  .expect p { color: var(--muted); font-size: 0.98rem; }
+
+  /* CTA */
+  .join { background: var(--nl-midnight); color: var(--nl-bone); border-top: 0; }
+  .join .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  @media (max-width: 860px) { .join .wrap { grid-template-columns: 1fr; } }
+  .join .eyebrow { color: var(--nl-slate-400); }
+  .join .lede { color: var(--nl-slate-300); margin-top: 22px; }
+  .join h2 { margin-top: 14px; }
+  .form { background: var(--nl-slate-900); border: 1px solid var(--nl-slate-700); border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 14px; }
+  .form label { font-size: 0.9rem; font-weight: 500; color: var(--nl-slate-300); }
+  .form input[type="email"] { width: 100%; padding: 0.85em 1em; border-radius: 10px; border: 1.5px solid var(--nl-slate-700); background: var(--nl-midnight); color: var(--nl-bone); font: inherit; font-size: 1rem; }
+  .form input[type="email"]::placeholder { color: var(--nl-slate-500); }
+  .form input[type="email"]:focus { border-color: var(--nl-signal); outline: none; }
+  .form .btn { width: 100%; }
+  .form .fine { font-family: var(--font-mono); font-size: 0.74rem; color: var(--nl-slate-400); line-height: 1.5; }
+  .form .ok { background: var(--nl-slate-800); border-radius: 10px; padding: 14px 16px; font-size: 0.95rem; color: var(--nl-bone); }
+  .form .ok .mono { display: block; margin-top: 6px; font-size: 0.74rem; color: var(--nl-slate-400); }
+
+  footer { background: var(--nl-midnight); color: var(--nl-slate-400); border-top: 1px solid var(--nl-slate-800); padding-block: 32px; font-size: 0.85rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; align-items: center; }
+  footer .logo svg { height: 20px; }
+  footer p { max-width: 46em; }
+</style>
+</head>
+<body>
+
+<!-- Brand SVGs from brand/ (mark + outlined wordmark). Wordmark fill uses currentColor so one symbol serves both grounds. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="nl-logo" viewBox="0 0 853.65 145">
+      <g transform="translate(10 10) scale(1.68919) translate(-3 -13)">
+        <path d="M10 36V70M22 26V80M34 42V64M106 42V64M118 26V80M130 36V70" fill="none" stroke="#FF8A00" stroke-width="10" stroke-linecap="round"/>
+        <path d="M4 53H56L66 20L78 53H136" fill="none" stroke="#FF8A00" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <path fill="currentColor" transform="translate(268.35 106.80)" d="M7.5 0.0V-68.7H23.4L48.4 -36.8Q49.1 -36.0 50.25 -34.5Q51.4 -33.0 52.5 -31.45Q53.6 -29.9 54.1 -29.0L54.6 -29.1Q54.6 -31.3 54.6 -33.35Q54.6 -35.4 54.6 -36.8V-68.7H71.2V0.0H55.4L28.9 -33.6Q27.6 -35.2 26.45 -36.9Q25.3 -38.6 24.6 -39.7L24.1 -39.6Q24.1 -38.0 24.1 -36.35Q24.1 -34.7 24.1 -33.6V0.0ZM82.9 0.0V-68.7H139.6V-54.7H100.8V-41.8H134.7V-28.1H100.8V-14.0H140.3V0.0ZM180.7 1.2Q170.8 1.2 163.65 -1.9Q156.5 -5.0 152.7 -11.2Q148.9 -17.4 148.9 -26.6V-68.7H166.9V-27.0Q166.9 -20.4 170.4 -16.6Q173.9 -12.8 180.7 -12.8Q187.5 -12.8 191.1 -16.6Q194.7 -20.4 194.7 -27.0V-68.7H212.6V-26.6Q212.6 -17.4 208.8 -11.2Q205 -5.0 197.9 -1.9Q190.8 1.2 180.7 1.2ZM223.9 0.0V-68.7H263.8Q271.4 -68.7 276.5 -65.85Q281.6 -63.0 284.15 -58.05Q286.7 -53.1 286.7 -47.0Q286.7 -40.4 283.65 -35.25Q280.6 -30.1 275.1 -27.2L288.9 0.0H268.9L257.5 -24.2H241.8V0.0ZM241.8 -37.5H260.3Q264 -37.5 266.25 -39.95Q268.5 -42.4 268.5 -46.5Q268.5 -49.2 267.5 -51.1Q266.5 -53.0 264.7 -54.05Q262.9 -55.1 260.3 -55.1H241.8ZM288.7 0.0 314.5 -68.7H336L361.8 0.0H342.7L338.6 -11.9H311.2L307.1 0.0ZM315.5 -25.3H334.2L329.3 -39.8Q328.9 -40.9 328.35 -42.55Q327.8 -44.2 327.25 -46.05Q326.7 -47.9 326.2 -49.8Q325.7 -51.7 325.2 -53.1H324.5Q324.1 -51.2 323.35 -48.8Q322.6 -46.4 321.85 -44.0Q321.1 -41.6 320.5 -39.8ZM366.5 0.0V-68.7H384.4V-14.7H419.3V0.0ZM425.3 0.0V-68.7H443.2V0.0ZM454.7 0.0V-68.7H507.4V-54.7H472.6V-39.9H503.2V-26.2H472.6V0.0ZM532.5 0.0V-54.0H510.2V-68.7H572.7V-54.0H550.4V0.0Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Neuralift home"><svg viewBox="0 0 853.65 145" role="img" aria-label="Neuralift"><use href="#nl-logo"/></svg></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#mechanism">How it works</a>
+      <a href="#research">The research</a>
+      <a href="#program">The program</a>
+      <a class="btn btn-primary" href="#join">Join the first cohort</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1. Hook · 2. Question -->
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">12 weeks · 20 min / day · no weights required</p>
+        <h1 id="hero-h">What if your next strength program started <em>in your brain?</em></h1>
+        <p class="lede">A 12-week, research-informed program to train the neural side of strength, without lifting weights. Start today with 20 minutes a day.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#join">Start today</a>
+          <a class="btn btn-ghost" href="#research">See the research</a>
+        </div>
+        <p class="hero-note">Founding cohort · limited places · no equipment to buy</p>
+      </div>
+
+      <div class="trace-card" aria-label="Illustration: one imagined maximal contraction as a signal trace">
+        <div class="trace-head"><span>Session 01 · Rep 3 of 10</span></div>
+        <svg class="trace" viewBox="0 0 420 160" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path class="track" d="M0 110 H420"/>
+          <path class="spike" d="M0 110 H60 C80 110 90 112 100 110 C110 108 120 100 126 96 C132 92 136 100 140 110 C144 120 150 118 156 112 L180 112 C190 112 196 100 202 60 C208 20 214 24 220 60 C226 96 232 110 240 112 L270 112 C280 112 290 120 300 118 C310 116 318 110 326 110 C334 110 340 108 350 110 L420 110"/>
+        </svg>
+        <div class="trace-foot">
+          <div><span class="k">Hold</span><span class="v">5<span>s</span></span></div>
+          <div><span class="k">Rest</span><span class="v">5<span>s</span></span></div>
+          <div><span class="k">Load</span><span class="v">0<span>kg</span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Mechanism -->
+  <section id="mechanism" aria-labelledby="mech-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow signal">How it works</p>
+          <h2 id="mech-h">Strength isn't only muscle. It's also your thinking.</h2>
+        </div>
+        <p class="lede muted">Every voluntary contraction begins as a signal. How much force you produce depends on the muscle you have, and on how completely your nervous system can recruit and drive it. Neuralift trains the second part.</p>
+      </div>
+
+      <div class="path">
+        <div>
+          <span class="n">01 · MOTOR CORTEX</span>
+          <svg viewBox="0 0 64 44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 30c-6-4-6-14 0-18 2-8 16-9 20-2 6-3 16 0 16 8 6 2 6 10 0 12-1 6-8 8-13 5-4 5-14 5-18-1-3 1-4-1-5-4z"/><path d="M30 12c0 8-4 14-8 16M34 14c4 4 8 6 12 6"/></svg>
+          <h3>Plan the contraction</h3>
+          <p>Eyes closed, you imagine pulling as hard as you can. Your brain plans the effort as if it were real.</p>
+        </div>
+        <div>
+          <span class="n">02 · SPINAL CORD</span>
+          <svg viewBox="0 0 64 44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22h14l5-12 8 24 6-16 4 8h15"/><circle cx="58" cy="22" r="3" fill="currentColor" stroke="none"/></svg>
+          <h3>Send the signal</h3>
+          <p>The signal travels from brain to muscle. Practising it strengthens the pathway.</p>
+        </div>
+        <div>
+          <span class="n">03 · MUSCLE</span>
+          <svg viewBox="0 0 64 44" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 30c4-12 12-18 24-18s20 6 24 18"/><path d="M14 30c3-7 9-11 18-11s15 4 18 11M20 30c2-4 6-6 12-6s10 2 12 6"/></svg>
+          <h3>Recruit the muscle</h3>
+          <p>More of the muscle you already have switches on when you need it. Same muscle, stronger signal.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. Research -->
+  <section id="research" aria-labelledby="res-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow signal">The research</p>
+          <h2 id="res-h">Scientists got people stronger using imagined contractions alone.</h2>
+        </div>
+        <p class="lede muted">In one peer-reviewed 12-week study, healthy participants practised maximal contractions entirely in their imagination, five days a week. Their measured strength went up.</p>
+      </div>
+
+      <div class="study">
+        <div class="figures">
+          <p class="eyebrow">Ranganathan et al., 2004 · study dose</p>
+          <div class="fig-row">
+            <div class="fig"><span class="v">12</span><span class="k">weeks</span></div>
+            <div class="fig"><span class="v">15</span><span class="k">min / day</span></div>
+            <div class="fig"><span class="v">5×</span><span class="k">per week</span></div>
+          </div>
+          <hr>
+          <p class="eyebrow">Reported strength change</p>
+          <div class="bars" role="list">
+            <div class="bar" role="listitem"><span class="lbl">Little-finger abduction, imagined</span><div class="trk"><div class="fil" style="width:66%"></div></div><span class="num">+35%</span></div>
+            <div class="bar" role="listitem"><span class="lbl">Elbow flexion, imagined</span><div class="trk"><div class="fil" style="width:25.5%"></div></div><span class="num">+13.5%</span></div>
+            <div class="bar" role="listitem"><span class="lbl">Little-finger abduction, physical</span><div class="trk"><div class="fil phys" style="width:100%"></div></div><span class="num">+53%</span></div>
+          </div>
+          <p class="caveat">The 35% result came from little-finger strength in one 12-week study. Elbow-flexion strength increased 13.5% in the same study. Results vary, and physical resistance training produced larger gains.</p>
+        </div>
+
+        <div>
+          <div class="prose">
+            <p>Alongside the strength changes, the researchers reported measurements consistent with increased cortical drive to the trained muscles. Nothing about the muscle itself had been loaded. What changed was the signal.</p>
+            <p>The wider literature points the same way, with the same honest limits.</p>
+          </div>
+          <ul class="lit">
+            <li>Strength improvements after imagined contractions have been reported in several independent studies.</li>
+            <li>Motor imagery has been shown to reduce strength loss during limb immobilisation.</li>
+            <li>Imagery training has been associated with increased motor-cortex activity.</li>
+            <li>Meta-analytic evidence finds motor imagery improves maximal voluntary strength compared with no training.</li>
+            <li>Across the literature, physical resistance training produces larger and more reliable gains.</li>
+          </ul>
+          <p class="cite">Ranganathan VK, Siemionow V, Liu JZ, Sahgal V, Yue GH. From mental power to muscle power: gaining strength by using the mind. Neuropsychologia. 2004;42(7):944–956.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Product · 6. Commitment -->
+  <section id="program" aria-labelledby="prog-h">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow signal">The Neuralift Protocol</p>
+          <h2 id="prog-h">Twelve weeks. Twenty minutes a day. No weights.</h2>
+        </div>
+        <p class="lede muted">Neuralift turns the research into a guided, first-person motor-imagery program. You measure your strength at the start, train daily with your eyes closed, and measure again at the end.</p>
+      </div>
+
+      <div class="weeks" aria-label="Twelve-week structure">
+        <div class="wk test" title="Week 1: baseline strength test">01</div>
+        <div class="wk">02</div><div class="wk">03</div><div class="wk">04</div><div class="wk">05</div><div class="wk">06</div>
+        <div class="wk">07</div><div class="wk">08</div><div class="wk">09</div><div class="wk">10</div><div class="wk">11</div>
+        <div class="wk test" title="Week 12: retest">12</div>
+      </div>
+      <div class="phases" aria-hidden="true">
+        <span class="test">Baseline test</span>
+        <span>Daily guided imagery sessions</span>
+        <span class="test">Retest</span>
+      </div>
+
+      <div class="program-grid">
+        <div class="pcard">
+          <span class="big">12<span>weeks</span></span>
+          <h3>The same length as the study</h3>
+          <p>Neural adaptation takes repetition over time. The protocol runs the full twelve weeks the research used, with a measured start and a measured finish.</p>
+        </div>
+        <div class="pcard">
+          <span class="big">20<span>min / day</span></span>
+          <h3>Guided, eyes closed</h3>
+          <p>Each session is voice-guided, first-person and kinesthetic: you feel the contraction rather than picture it. Sets, holds and rests are timed for you.</p>
+        </div>
+        <div class="pcard">
+          <span class="big">0<span>kg</span></span>
+          <h3>No external load</h3>
+          <p>Nothing to buy and nothing to lift. Train on a bench, a chair, or a bed. A complement to physical training, or a way to train when load is off the table.</p>
+        </div>
+      </div>
+
+      <div class="session">
+        <div>
+          <p class="eyebrow signal" style="margin-bottom:14px">One session</p>
+          <h3 style="font-size:1.7rem">What twenty minutes looks like</h3>
+          <p class="muted" style="margin-top:14px;max-width:30em">Every session follows the same shape. Consistency is the point: the study's participants did the same thing, day after day, for twelve weeks.</p>
+        </div>
+        <ul class="timeline">
+          <li><span class="t">00:00</span><span class="d">Settle and focus<small>Sit or lie down, eyes closed. Bring attention to the target muscle.</small></span></li>
+          <li><span class="t">02:00</span><span class="d">Imagined maximal contractions<small>Sets of 5-second maximal efforts, 5 seconds rest, guided rep by rep.</small></span></li>
+          <li><span class="t">16:00</span><span class="d">Imagery quality check<small>Rate how vivid and effortful the contractions felt. This is tracked across the program.</small></span></li>
+          <li><span class="t">18:00</span><span class="d">Cool-down and log<small>Two minutes down, then perceived exertion and adherence are recorded.</small></span></li>
+          <li><span class="t">20:00</span><span class="d">Done<small>Same time tomorrow.</small></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 8. CTA -->
+  <section id="join" class="join" aria-labelledby="join-h">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Founding cohort</p>
+        <h2 id="join-h">Strength starts in the brain. Train the signal.</h2>
+        <p class="lede">Join the first Neuralift cohort. Twelve weeks, twenty minutes a day, a strength test at each end, and a protocol built from peer-reviewed research. We'll open places in order of sign-up.</p>
+      </div>
+      <form class="form" id="waitlist" novalidate>
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+        <button class="btn btn-primary" type="submit" id="submit">Join the first cohort</button>
+        <p class="fine">No spam. One email when your place opens, one when the cohort closes. Unsubscribe any time.</p>
+        <div class="ok" id="ok" hidden></div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Neuralift home" style="color:#F5F3EE"><svg viewBox="0 0 853.65 145" role="img" aria-label="Neuralift"><use href="#nl-logo"/></svg></a>
+    <p>Neuralift is a motor-imagery strength protocol informed by peer-reviewed research. It is not a medical, rehabilitation or injury-treatment product, and it is not a substitute for physical resistance training. © 2026 Neuralift.</p>
+  </div>
+</footer>
+
+<script>
+  // Waitlist. Set WAITLIST_ENDPOINT to a URL that accepts POST {email} and the form will submit there.
+  // Until then the form runs in demo mode and says so.
+  const WAITLIST_ENDPOINT = "";
+
+  const form = document.getElementById("waitlist");
+  const email = document.getElementById("email");
+  const ok = document.getElementById("ok");
+  const submit = document.getElementById("submit");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const value = email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      ok.hidden = false;
+      ok.textContent = "That doesn't look like an email address. Check it and try again.";
+      email.focus();
+      return;
+    }
+    submit.disabled = true;
+    submit.textContent = "Joining…";
+    try {
+      if (WAITLIST_ENDPOINT) {
+        const res = await fetch(WAITLIST_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: value, source: "landing" }) });
+        if (!res.ok) throw new Error("Request failed");
+        ok.innerHTML = "You're on the list. We'll email you when your place in the first cohort opens.";
+      } else {
+        ok.innerHTML = "Thanks. You'd be on the list for the first cohort.<span class=\"mono\">Demo mode: the waitlist endpoint isn't connected yet, so nothing was sent.</span>";
+      }
+      ok.hidden = false;
+      form.reset();
+      submit.textContent = "Joined";
+    } catch (err) {
+      ok.hidden = false;
+      ok.textContent = "Something went wrong on our side. Try again in a moment.";
+      submit.disabled = false;
+      submit.textContent = "Join the first cohort";
+    }
+  });
+</script>
+</body>
+</html>

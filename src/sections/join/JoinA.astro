@@ -1,0 +1,76 @@
+---
+/** Founding-cohort sign-up. Posts to PUBLIC_WAITLIST_ENDPOINT; demo mode when unset. */
+const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT || '';
+---
+<section id="join" class="section bg-midnight text-bone" aria-labelledby="join-h">
+  <div class="wrap grid items-center gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-18">
+    <div>
+      <p class="eyebrow text-slate-400">Founding cohort</p>
+      <h2 id="join-h" class="h2 mt-3.5">Strength starts in the brain. Train the signal</h2>
+      <p class="lede mt-5 text-slate-300">Join the first Neuralift cohort. Twelve weeks, twenty minutes a day, a strength test at each end and a protocol built from peer-reviewed research. We'll open places in order of <span class="whitespace-nowrap">sign-up</span></p>
+    </div>
+    {/* No ids in here: every variant is in the DOM, so the script finds elements via data-waitlist. */}
+    <form data-waitlist class="flex flex-col gap-3.5 rounded-2xl border border-slate-700 bg-slate-900 p-6" data-endpoint={endpoint} novalidate>
+      <label class="flex flex-col gap-3.5 text-[0.9rem] font-medium text-slate-300">
+        Email address
+        <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required
+          class="w-full rounded-[10px] border-[1.5px] border-slate-700 bg-midnight px-4 py-3.5 text-base font-normal text-bone placeholder:text-slate-500 focus:border-signal focus:outline-none aria-invalid:border-signal" />
+      </label>
+      <button type="submit" class="btn btn-primary w-full">Join the first cohort</button>
+      <p class="font-mono text-[0.8rem] leading-[1.5] text-slate-400">No spam. One email when your place opens, one when the cohort closes. Unsubscribe any time</p>
+      <div data-status role="status" aria-live="polite" class="rounded-[10px] bg-slate-800 px-4 py-3.5 text-[0.95rem] text-bone empty:hidden data-[tone=error]:border-l-4 data-[tone=error]:border-signal"></div>
+    </form>
+  </div>
+</section>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-waitlist]')) {
+    const email = form.querySelector<HTMLInputElement>('input[name="email"]')!;
+    const status = form.querySelector<HTMLDivElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const endpoint = form.dataset.endpoint || '';
+    const label = submit.textContent;
+
+    const show = (tone: 'ok' | 'error', html: string) => {
+      status.dataset.tone = tone;
+      status.innerHTML = html;
+    };
+
+    email.addEventListener('input', () => email.removeAttribute('aria-invalid'));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const value = email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        email.setAttribute('aria-invalid', 'true');
+        show('error', "That doesn't look like an email address. Check it and try again");
+        email.focus();
+        return;
+      }
+      submit.disabled = true;
+      submit.textContent = 'Joining…';
+      const experiments = (window as any).nlExperiments || {};
+      try {
+        if (endpoint) {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: value, source: 'landing', experiments }),
+          });
+          if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+          show('ok', "You're on the list. We'll email you when your place in the first cohort opens");
+          // Only real sign-ups count as conversions.
+          (window as any).posthog?.capture('waitlist_submitted');
+        } else {
+          show('ok', "Thanks. You'd be on the list for the first cohort<span class=\"mt-1.5 block font-mono text-[0.8rem] text-slate-400\">Demo mode: the waitlist endpoint isn't connected yet, so nothing was sent</span>");
+        }
+        form.reset();
+        submit.textContent = 'Joined';
+      } catch {
+        show('error', 'Something went wrong on our side. Try again in a moment');
+        submit.disabled = false;
+        submit.textContent = label;
+      }
+    });
+  }
+</script>

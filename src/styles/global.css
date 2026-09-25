@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* Brand tokens (mirrors ../../brand/tokens.css). The default Tailwind palette is
+   removed on purpose: Midnight, Bone, Signal and the Slate ramp are the whole palette. */
+@theme {
+  --color-*: initial;
+  --color-midnight: #0A0F1C;
+  --color-bone: #F5F3EE;
+  --color-white: #FFFFFF;
+  --color-signal: #FF8A00;
+  --color-signal-bright: #FFA033;
+  --color-signal-deep: #B34700;
+  --color-signal-wash: #FFEBD3;
+  --color-signal-press: #E67C00;
+  --color-slate-900: #131927;
+  --color-slate-800: #1C2334;
+  --color-slate-700: #2A3346;
+  --color-slate-600: #414B60;
+  --color-slate-500: #5B6577;
+  --color-slate-400: #8A93A6;
+  --color-slate-300: #B4BAC8;
+  --color-slate-200: #D9DCE4;
+  --color-slate-100: #ECEEF2;
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Archivo", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --animate-draw: draw 3.2s cubic-bezier(.4,0,.2,1) .4s forwards;
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+}
+
+@layer base {
+  /* Keep anchor targets clear of the 68px sticky header. */
+  html { scroll-behavior: smooth; scroll-padding-top: 68px; }
+  body { @apply bg-bone text-midnight font-sans antialiased text-[17px] leading-[1.55]; }
+  :focus-visible { outline: 3px solid var(--color-signal); outline-offset: 3px; }
+  p, li { text-wrap: pretty; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+}
+
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-[1120px] px-4 sm:px-8 lg:px-10; }
+  .section { @apply py-16 md:py-24 lg:py-28; }
+
+  .display { @apply font-display font-extrabold tracking-[-0.035em] leading-[1.02] text-balance; }
+  .h2 { @apply font-display font-extrabold tracking-[-0.035em] leading-[1.02] text-balance text-[clamp(2rem,4.6vw,3.4rem)]; }
+  .h3 { @apply font-display font-extrabold text-[1.35rem] tracking-[-0.02em] leading-[1.15] text-balance; }
+  .lede { @apply text-[clamp(1.1rem,1.6vw,1.3rem)] leading-[1.5] max-w-[34em]; }
+  .eyebrow { @apply font-mono text-[0.78rem] font-medium tracking-[0.08em] uppercase text-balance; }
+  .num { @apply font-display font-black tracking-[-0.04em] leading-none tabular-nums; }
+
+  /* Signal is spent on one primary action per screen. Text on Signal is always Midnight. */
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold whitespace-nowrap border-[1.5px] border-transparent no-underline transition-colors duration-150; }
+  .btn-primary { @apply bg-signal text-midnight hover:bg-signal-press active:translate-y-px; }
+  .btn-ghost { @apply bg-transparent border-current; }
+}

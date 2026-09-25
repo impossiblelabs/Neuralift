@@ -1,0 +1,68 @@
+---
+import SectionHead from '../../components/SectionHead.astro';
+
+const dose = [['12', 'weeks'], ['15', 'min / day'], ['5×', 'per week']];
+const results = [
+  { label: 'Little-finger abduction, imagined', pct: 35, physical: false },
+  { label: 'Elbow flexion, imagined', pct: 13.5, physical: false },
+  { label: 'Little-finger abduction, physical', pct: 53, physical: true },
+];
+// Bars are scaled to the largest result.
+const maxPct = Math.max(...results.map((r) => r.pct));
+const literature = [
+  'Strength improvements after imagined contractions have been reported in several independent studies',
+  'Motor imagery has been shown to reduce strength loss during limb immobilisation',
+  'Imagery training has been associated with increased motor-cortex activity',
+  'Meta-analytic evidence finds motor imagery improves maximal voluntary strength compared with no training',
+  'Across the literature, physical resistance training produces larger and more reliable gains',
+];
+---
+<section id="research" class="section border-t border-slate-200" aria-labelledby="res-h">
+  <div class="wrap">
+    <SectionHead eyebrow="The research" title="Scientists got people stronger using imagined contractions alone" id="res-h">
+      In one peer-reviewed 12-week study, healthy participants practised maximal contractions entirely in their imagination, five days a week. Their measured strength went up
+    </SectionHead>
+
+    <div class="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:gap-14">
+      <div class="flex flex-col gap-5 self-start rounded-2xl bg-midnight p-7 text-bone md:sticky md:top-24">
+        <p class="eyebrow text-slate-400">Ranganathan et al., 2004&nbsp;· study dose</p>
+        <div class="grid grid-cols-3 gap-4">
+          {dose.map(([v, k]) => (
+            <div class="flex flex-col gap-1">
+              <span class="num text-[clamp(1.7rem,3.4vw,2.6rem)]">{v}</span>
+              <span class="eyebrow text-[0.75rem] leading-[1.35] text-slate-400">{k}</span>
+            </div>
+          ))}
+        </div>
+        <hr class="border-slate-700" />
+        <p class="eyebrow text-slate-400">Reported strength change</p>
+        <div class="flex flex-col gap-3" role="list">
+          {results.map((r) => (
+            <div class="grid grid-cols-[1fr_4.5rem] items-center gap-3 text-[0.9rem] sm:grid-cols-[11rem_1fr_4.5rem]" role="listitem">
+              <span class="col-span-2 text-slate-300 sm:col-span-1">{r.label}</span>
+              <div class="h-2.5 overflow-hidden rounded-full bg-slate-700"><div class:list={['h-full rounded-full', r.physical ? 'bg-slate-300' : 'bg-signal']} style={`width:${(r.pct / maxPct) * 100}%`}></div></div>
+              <span class="text-right font-mono text-[0.85rem] tabular-nums text-bone">+{r.pct}%</span>
+            </div>
+          ))}
+        </div>
+        <p class="text-[0.86rem] leading-[1.5] text-slate-400">The 35% result came from little-finger strength in one 12-week study. Elbow-flexion strength increased 13.5% in the same study. Results vary. Physical resistance training produced larger gains</p>
+      </div>
+
+      <div>
+        <div class="max-w-[36em] space-y-4">
+          <p>Alongside the strength changes, the researchers reported measurements consistent with increased cortical drive to the trained muscles. Nothing about the muscle itself had been loaded. What changed was the signal</p>
+          <p>The wider literature points the same way, with the same honest limits</p>
+        </div>
+        <ul class="mt-7 flex flex-col">
+          {literature.map((t) => (
+            <li class="grid grid-cols-[22px_1fr] items-start gap-3 border-t border-slate-200 py-3.5 text-[0.98rem] last:border-b">
+              <span class="mt-[7px] h-2.5 w-2.5 rounded-full bg-signal" aria-hidden="true"></span>
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 font-mono text-[0.78rem] leading-[1.5] text-slate-500">Ranganathan VK, Siemionow V, Liu JZ, Sahgal V, Yue GH. From mental power to muscle power: gaining strength by using the mind. Neuropsychologia. 2004;42(7):944–956</p>
+      </div>
+    </div>
+  </div>
+</section>
